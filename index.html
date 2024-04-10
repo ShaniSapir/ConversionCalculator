@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion App</title>
+</head>
+<body>
+    <h1>Conversion App</h1>
+    <form id="conversionForm">
+        <label for="conversionType">Choose a conversion type:</label>
+        <select id="conversionType">
+            <option value="dollarToShekel">USD to ILS</option>
+            <option value="euroToShekel">EUR to ILS</option>
+            <option value="poundToShekel">GBP to ILS</option>
+            <option value="rupeeToShekel">INR to ILS</option>
+            <option value="wineToShekel">WINE to ILS</option>
+            <option value="wonToShekel">WON to ILS</option>
+        </select>
+        <br>
+        <label for="amount">Enter amount:</label>
+        <input type="number" id="amount">
+        <button type="submit">Convert</button>
+    </form>
+    <p id="result"></p>
+    <button type="submit">Display Conversion Rates</button>
+
+    <script src="index.js"></script>
+</body>
+</html>
