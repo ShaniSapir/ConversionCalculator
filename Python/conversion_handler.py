@@ -27,15 +27,16 @@ class Converter:
             req = None
 
         request_failed = req is None or not req.ok
-        if request_failed:    
+        if request_failed:
             try:
-                url = (LOCALHOST % cls.ports['default_handler']) + "/" + conversion
+                url = (LOCALHOST %
+                       cls.ports['default_handler']) + "/" + conversion
                 req = requests.post(url, json=payload)
             except:
                 req = None
             request_failed = req is None or not req.ok
             if request_failed:
-                return
+                return req.json().get('error', 'Error') if req else 'Server not found'
         return req.json().get('results')
 
     @classmethod
@@ -57,3 +58,7 @@ class Converter:
     @classmethod
     def rupee_to_shekel(cls, value):
         return cls.general_conversion('rupee_shekel', value)
+
+    @classmethod
+    def wan_to_shekel(cls, value):
+        return cls.general_conversion('wan_shekel', value)

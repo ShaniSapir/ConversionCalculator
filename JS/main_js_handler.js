@@ -21,9 +21,17 @@ function convert(val, mult){
   return parseFloat((parseFloat(val) * mult).toFixed(2))
 }
 function handle_conversion(req, res, mult){
+  if(isNaN(req.body)) {
+    res.status(400).json({results : 0, error:"Missing value"})
+    return
+  }
   const val  = req.body.value;
+  if(isNaN(val)){
+    res.status(400).json({results : 0, error:"Missing value"})
+    return
+  }
   if(!is_float(val)){
-    res.status(400).json({results : 0})
+    res.status(400).json({results : 0, error:"Value not numeric"})
     return
   }
   res.status(200).json({results : convert(val,mult)});
@@ -44,8 +52,11 @@ app.post('/yen_shekel', (req, res) => {
 app.post('/rupee_shekel', (req, res) => {
   handle_conversion(req, res, conversions.rupee_shekel)
 });
+app.post('/wan_shekel', (req, res) => {
+  handle_conversion(req, res, conversions.wan_shekel)
+});
 
 // Start the server
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`listening at http://localhost:${port}`);
 });

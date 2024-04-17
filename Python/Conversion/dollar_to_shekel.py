@@ -17,7 +17,7 @@ with open(CONFIGS_PATH, mode='r') as f:
     conversions: dict = json.load(f).get('conversions')
 
 app = Flask(__name__)
-
+app.debug=False
 
 def isfloat(num):
     try:
@@ -30,15 +30,19 @@ def isfloat(num):
 @app.route('/', methods=['POST'])
 def convert_dollar_to_shekel():
     data = request.get_json()
-    if not data:
-        return jsonify({'results': 0}), 400
+    error = None
+    if not data or not data.get('value'):
+        error = "Missing value"
 
-    value = str(data.get('value'))
-    if value is None or not isfloat(value):
-        return jsonify({'results': 0}), 400
+    if not error:
+        value = str(data.get('value'))
+        if not isfloat(value):
+            error = 'Value not numeric'
+    if error:
+        return jsonify({'results': 0, 'error': error}), 400
 
-    res = round(float(value) * conversions.get('dollar_shekel', 3.7), 2)
+    res = round(float(value) * conversions.get('dollar_shekel'), 2)
     return jsonify({'results': res}), 200
 
 
-app.run(port=PORT)
+app.run(host="0.0.0.0", port=PORT)
