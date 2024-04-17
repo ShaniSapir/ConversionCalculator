@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: py-dollar-shekel-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: py-dollar-shekel-server
+  template:
+    metadata:
+      labels:
+        app: py-dollar-shekel-server
+    spec:
+      containers:
+      - name: py-dollar-shekel-server
+        image: dollar-shekel:latest
+        ports:
+        - containerPort: 3000
+        
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: py-euro-shekel-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: py-euro-shekel-server
+  template:
+    metadata:
+      labels:
+        app: py-euro-shekel-server
+    spec:
+      containers:
+      - name: py-euro-shekel-server
+        image: euro-shekel:latest
+        ports:
+        - containerPort: 3001

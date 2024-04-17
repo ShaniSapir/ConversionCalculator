@@ -31,12 +31,14 @@ class Converter:
             try:
                 url = (LOCALHOST %
                        cls.ports['default_handler']) + "/" + conversion
-                req = requests.post(url, json=payload)
+                new_req = requests.post(url, json=payload)
+                if new_req:
+                    req = new_req
             except:
-                req = None
+                pass
             request_failed = req is None or not req.ok
             if request_failed:
-                return req.json().get('error', 'Error') if req else 'Server not found'
+                return req.json().get('error', 'Error') if req is not None else 'Server not found'
         return req.json().get('results')
 
     @classmethod
@@ -62,3 +64,4 @@ class Converter:
     @classmethod
     def wan_to_shekel(cls, value):
         return cls.general_conversion('wan_shekel', value)
+

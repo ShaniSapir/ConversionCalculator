@@ -1,0 +1,20 @@
+# Use an official Python runtime as a parent image
+FROM python:3.10.6-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+ENV PY_DOLLAR_TO_SHEKEL_PORT=3000
+ENV PY_EURO_TO_SHEKEL_PORT=3001
+ENV JS_HANDLER_PORT=3002
+
+COPY Python/Conversion/euro_to_shekel.py /app
+COPY configs.json /app
+COPY requirements.txt /app
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE ${PY_EURO_TO_SHEKEL_PORT}
+
+# Run app.py when the container launches
+CMD ["python3", "euro_to_shekel.py"]
