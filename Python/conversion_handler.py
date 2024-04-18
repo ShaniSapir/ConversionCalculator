@@ -25,20 +25,19 @@ class Converter:
             req = requests.post(url, json=payload)
         except:
             req = None
-
-        request_failed = req is None or not req.ok
+        request_failed = req is None
         if request_failed:
             try:
                 url = (LOCALHOST %
                        cls.ports['default_handler']) + "/" + conversion
                 new_req = requests.post(url, json=payload)
-                if new_req:
+                if new_req is not None:
                     req = new_req
             except:
                 pass
-            request_failed = req is None or not req.ok
-            if request_failed:
-                return req.json().get('error', 'Error') if req is not None else 'Server not found'
+        request_failed = req is None or not req.ok
+        if request_failed:
+            return req.json().get('error', 'Error') if req is not None else 'Server not found'
         return req.json().get('results')
 
     @classmethod
