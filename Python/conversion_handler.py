@@ -22,7 +22,7 @@ class Converter:
         payload = create_payload(value)
         try:
             url = LOCALHOST % cls.ports["py_" + conversion]
-            req = requests.post(url, json=payload)
+            req = requests.post(url, json=payload, timeout=0.05)
         except:
             req = None
         request_failed = req is None
@@ -30,7 +30,7 @@ class Converter:
             try:
                 url = (LOCALHOST %
                        cls.ports['default_handler']) + "/" + conversion
-                new_req = requests.post(url, json=payload)
+                new_req = requests.post(url, json=payload, timeout=0.05)
                 if new_req is not None:
                     req = new_req
             except:
@@ -63,4 +63,3 @@ class Converter:
     @classmethod
     def wan_to_shekel(cls, value):
         return cls.general_conversion('wan_shekel', value)
-

@@ -1,21 +1,16 @@
-# Use an official Node runtime as a parent image
 FROM node:14-alpine
 
 ENV PY_DOLLAR_TO_SHEKEL_PORT=3000
 ENV PY_EURO_TO_SHEKEL_PORT=3001
 ENV JS_HANDLER_PORT=3002
 
-# Set the working directory in the container
 WORKDIR /usr/src/app
 
 COPY JS/main_js_handler.js .
 COPY *.json .
 
-# Install any needed packages specified in package.json
 RUN npm install
 
-# Make port 3000 available to the world outside this container
 EXPOSE ${JS_HANDLER_PORT}
 
-# Run the app when the container launches
 CMD ["node", "main_js_handler.js"]
