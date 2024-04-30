@@ -17,13 +17,13 @@ def run_on_different_thread(func):
 with open(CONFIGS_PATH, mode='r') as f:
     conversions: dict = json.load(f).get('conversions')
 
-@run_on_different_thread
-def turn_on_docker_image(docker_name: str):
-    DockerController.turn_on(docker_name)
 
-@run_on_different_thread
+def turn_on_docker_image(docker_name: str):
+    return DockerController.turn_on(docker_name)
+
+
 def turn_off_docker_image(docker_name: str):
-    DockerController.turn_off(docker_name)
+    return DockerController.turn_off(docker_name)
 
 
 def create_converter():
@@ -50,7 +50,7 @@ def run_ui():
     # Create the main window
     root = tk.Tk()
     root.title('Conversion Calcualtor')
-    root.geometry('500x200')  # Set the size of the window
+    root.geometry('460x400')  # Set the size of the window
     converter = create_converter()
 
     def convert_click():
@@ -69,37 +69,67 @@ def run_ui():
             color = button.cget('bg')
             button.config()
             if color == 'red':
-                turn_on_docker_image(docker_name)
-                button.config(bg='green')
+                if turn_on_docker_image(docker_name):
+                    button.config(bg='green')
             elif color == 'green':
-                turn_off_docker_image(docker_name)
-                button.config(bg='red')
+                if turn_off_docker_image(docker_name):
+                    button.config(bg='red')
         return on_click
 
     # Create buttons on the left side
     button1 = tk.Button(root, text='Py Dollar to Shekel',
                         background='red', font=FONT)
-    button1.grid(row=0, column=0, padx=10, pady=2, sticky='ew')
-    button1.bind('<Button-1>', create_docker_button_event('dollar-shekel'))
+    button1.grid(row=2, column=0, pady=5, padx=5)
+    button1.bind('<Button-1>', create_docker_button_event('py-dollar-shekel'))
 
     button2 = tk.Button(root, text='Py Euro to Shekel',
                         background='red', font=FONT)
-    button2.bind('<Button-1>', create_docker_button_event('euro-shekel'))
-    button2.grid(row=1, column=0, padx=10, pady=2, sticky='ew')
+    button2.bind('<Button-1>', create_docker_button_event('py-euro-shekel'))
+    button2.grid(row=2, column=1, pady=5, padx=5)
+
+    button4 = tk.Button(root, text='JS Dollar to Shekel',
+                        background='red', font=FONT)
+    button4.grid(row=3, column=0, pady=5, padx=5)
+    button4.bind('<Button-1>', create_docker_button_event('js-dollar-shekel'))
+
+    button5 = tk.Button(root, text='JS Euro to Shekel',
+                        background='red', font=FONT)
+    button5.grid(row=3, column=1, pady=5, padx=5)
+    button5.bind('<Button-1>', create_docker_button_event('js-euro-shekel'))
+
+    button6 = tk.Button(root, text='JS Pound to Shekel',
+                        background='red', font=FONT)
+    button6.grid(row=4, column=0, pady=5, padx=5)
+    button6.bind('<Button-1>', create_docker_button_event('js-pound-shekel'))
+
+    button7 = tk.Button(root, text='JS Rupee to Shekel',
+                        background='red', font=FONT)
+    button7.grid(row=4, column=1, pady=5, padx=5)
+    button7.bind('<Button-1>', create_docker_button_event('js-rupee-shekel'))
+
+    button8 = tk.Button(root, text='JS Wan to Shekel',
+                        background='red', font=FONT)
+    button8.grid(row=5, column=0, pady=5, padx=5)
+    button8.bind('<Button-1>', create_docker_button_event('js-wan-shekel'))
+
+    button9 = tk.Button(root, text='JS Yen to Shekel',
+                        background='red', font=FONT)
+    button9.grid(row=5, column=1, pady=5, padx=5)
+    button9.bind('<Button-1>', create_docker_button_event('js-yen-shekel'))
 
     button3 = tk.Button(root, text='Main JS handler',
                         background='red', font=FONT)
-    button3.grid(row=2, column=0, padx=10, pady=2, sticky='ew')
+    button3.grid(row=6, column=0, pady=5, padx=5)
     button3.bind('<Button-1>', create_docker_button_event('js-handler'))
 
     # Create the dropdown list and textbox in the center
     options = [c.replace('_', ' ').title() for c in conversions]
     dropdown = ttk.Combobox(root, values=options)
-    dropdown.grid(row=0, column=1, padx=10, pady=10, sticky='ew')
+    dropdown.grid(row=0, column=0, padx=10, pady=10, sticky='ew')
     dropdown.set(options[0])
 
     textbox = tk.Entry(root)
-    textbox.grid(row=1, column=1, padx=10, pady=2, sticky='ew')
+    textbox.grid(row=1, column=0, padx=10, pady=2, sticky='ew')
 
     # Create the button on the top right
     right_button = tk.Button(root, text='Convert', command=convert_click)
@@ -108,14 +138,14 @@ def run_ui():
     # Create the label with border at the bottom
     label_with_border = tk.Label(
         root, text='', relief='solid', borderwidth=1, height=5, font=FONT)
-    label_with_border.grid(row=3, column=0, columnspan=3,
+    label_with_border.grid(row=7, column=0, columnspan=3,
                            padx=10, pady=10, sticky='ew')
 
     # Configure the rows and columns
     # Gives the bottom row some weight to push everything up
-    root.grid_rowconfigure(3, weight=1)
+    # root.grid_rowconfigure(8, weight=1)
     # Makes the center column expandable
-    root.grid_columnconfigure(1, weight=1)
+    # root.grid_columnconfigure(1, weight=1)
 
     # Start the Tkinter event loop
     root.mainloop()

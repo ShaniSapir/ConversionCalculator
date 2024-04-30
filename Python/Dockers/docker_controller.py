@@ -9,24 +9,21 @@ class DockerController:
 
     @classmethod
     def turn_on(cls, container_name: str) -> bool:
-        """Starts a Docker container by name, unless it's already running."""
         with cls.lock:
             if container_name in cls.containers:
                 return False
     
-            # Inspect the image to find out the exposed ports
             image = cls.client.images.get(container_name)
             ports = image.attrs['Config']['ExposedPorts']
             
-            # Setup port mappings - map each exposed port to the same port on the host
             port_bindings = {port: int(port.split('/')[0]) for port in ports}
             try:
-                # Attempt to run the container
                 container = cls.client.containers.run(
                     container_name,
                     detach=True,
-                    # Ensure port mappings are specific to the container if needed
-                    ports=port_bindings
+                    ports=port_bindings,
+                    network = 'dockernet',
+                    name= container_name
                 )
             except docker.errors.ContainerError as e:
                 return False
