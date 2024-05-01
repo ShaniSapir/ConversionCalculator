@@ -1,5 +1,6 @@
 #!/bin/bash
 
+docker network create dockernet
 docker build -f Dockerfiles/Dockerfile.py_dollar_shekel -t py-dollar-shekel .
 docker build -f Dockerfiles/Dockerfile.py_euro_shekel -t py-euro-shekel .
 docker build -f Dockerfiles/Dockerfile.js_dollar_shekel -t js-dollar-shekel .
